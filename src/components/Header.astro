@@ -1,0 +1,16 @@
+---
+import Search from './Search.astro';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header class="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-800">
+  <nav class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+      <a href="/" class="text-xl font-bold text-gray-800 dark:text-white">WP Snippets</a>
+      <div class="flex items-center gap-2">
+        <Search />
+        <ThemeToggle />
+      </div>
+    </div>
+  </nav>
+</header>

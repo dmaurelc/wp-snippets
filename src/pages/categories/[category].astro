@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SnippetCard from '../../components/SnippetCard.astro';
+import { getCategories, getSnippetsByCategory } from '../../lib/api';
+
+export async function getStaticPaths() {
+  const categories = await getCategories();
+  
+  return categories.map((category) => ({
+    params: { category },
+  }));
+}
+
+const { category } = Astro.params;
+const snippets = await getSnippetsByCategory(category);
+---
+
+<Layout title={`${category} Snippets - Code Snippets Blog`}>
+  <h1 class="text-4xl font-bold text-gray-900 mb-8">{category} Snippets</h1>
+  
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {snippets.map((snippet) => (
+      <SnippetCard
+        title={snippet.title}
+        description={snippet.description}
+        category={snippet.category}
+        slug={snippet.slug}
+      />
+    ))}
+  </div>
+</Layout>

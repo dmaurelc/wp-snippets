@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCategories } from '../../lib/api';
+
+const categories = await getCategories();
+---
+
+<Layout title="Categories - Code Snippets Blog">
+  <h1 class="text-4xl font-bold text-gray-900 mb-8">Categories</h1>
+  
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    {categories.map((category) => (
+      <a
+        href={`/categories/${category}`}
+        class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+      >
+        <h2 class="text-xl font-semibold text-gray-900">{category}</h2>
+      </a>
+    ))}
+  </div>
+</Layout>

@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply font-body;
+    font-size: 100%;
+  }
+  body {
+    @apply font-body text-slate-600 dark:text-gray-300 bg-white dark:bg-gray-900;
+    font-size: 100%;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-slate-800 dark:text-white;
+  }
+  p, li, a, span, div {
+    @apply font-body;
+  }        
+  
+  .prose {
+    @apply font-body;
+    
+    h1, h2, h3, h4, h5, h6 {
+      @apply font-heading;
+    }
+    
+    p, li {
+      @apply font-body;
+    }
+  }
+  
+  .snippet-single {
+    h2, h3, h4 {
+      @apply mb-4 font-heading;
+    }
+
+    p {
+      @apply mb-6 font-body;
+    }
+    
+    ul {
+      @apply list-disc pl-8 mb-4;
+    }
+    
+    ol {
+      @apply list-decimal pl-8 mb-4;
+    }
+
+    h4 > code, li > code {
+      @apply dark:bg-slate-950 text-sm py-0.5 dark:text-gray-300 rounded px-1 border border-slate-600 font-mono;
+    }
+
+    pre > code {
+      @apply dark:bg-slate-950 text-sm p-6 dark:text-gray-300 rounded-md border border-slate-600 overflow-hidden font-mono;
+    }
+  }
+}
+
+@layer components {
+  section>div:first-child {
+    @apply container mx-auto max-w-screen-lg px-4;
+  }
+  .bg-image {
+    @apply object-cover w-full h-full absolute top-0 left-0;
+  }
+}
