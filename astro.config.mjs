@@ -1,10 +1,13 @@
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import sitemap from '@astrojs/sitemap';
-import prefetch from '@astrojs/prefetch';
+import { defineConfig } from "astro/config";
+import netlify from "@astrojs/netlify";
+import tailwind from "@astrojs/tailwind";
+import sitemap from "@astrojs/sitemap";
+import prefetch from "@astrojs/prefetch";
 
 export default defineConfig({
-  site: 'https://your-domain.com',
+  output: "server",
+  adapter: netlify(),
+  site: "https://your-domain.com",
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -14,11 +17,11 @@ export default defineConfig({
   ],
   markdown: {
     shikiConfig: {
-      theme: 'dracula',
-      wrap: true
-    }
+      theme: "dracula",
+      wrap: true,
+    },
   },
   build: {
-    format: 'directory'
-  }
+    format: "directory",
+  },
 });
