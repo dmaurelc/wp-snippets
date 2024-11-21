@@ -3,7 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import SnippetCard from "../components/SnippetCard.astro";
 import { getAllSnippets } from "../lib/api";
 
-const snippets = await getAllSnippets();
+// Obtener todos los snippets desde la API
+// const snippets = await getAllSnippets();
+const snippets = (await getAllSnippets()).slice(0, 6); // Limitar a los primeros 6 resultados
 ---
 
 <Layout title="Code Snippets Blog">
@@ -55,6 +57,75 @@ const snippets = await getAllSnippets();
             />
           ))
         }
+      </ul>
+    </div>
+  </section>
+  <section>
+    <div
+      class="grid gap-6 border-t border-0 border-gray-300 border-solid md:py-12 py-8"
+    >
+      <h2 class="font-semibold md:text-2xl text-lg dark:text-white">
+        Otras herramientas
+      </h2><ul class="grid md:grid-cols-2 gap-4">
+        <li class="rounded-md overflow-hidden group">
+          <a
+            href="https://device-preview.netlify.app/"
+            rel=""
+            target="_blank"
+            title=""
+            aria-label=""
+            class="not-prose group relative rounded-lg border border-black/15 p-0 transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white grid isolate overflow-hidden"
+            ><div class="w-full h-48 overflow-hidden">
+              <img
+                width="900"
+                height="900"
+                src="img/device-view.webp"
+                class="w-full h-full object-cover -z-10 group-hover:scale-110 duration-1000 transition-all css-filter size-full"
+                alt="Device View"
+                decoding="async"
+              />
+            </div><div
+              class="flex flex-col truncate gap-1 pl p-4 relative z-10"
+            >
+              <h3
+                class="font-semibold max-w-xl truncate text-xl dark:text-white"
+              >
+                Device View
+              </h3><p class="dark:text-gray-200 w-full truncate text-base">
+                Previsualiza tu página web en diferentes dispositivos.
+              </p>
+            </div></a
+          >
+        </li><li class="rounded-md overflow-hidden group">
+          <a
+            href="https://web3forms-generator.netlify.app/"
+            rel=""
+            target="_blank"
+            title=""
+            aria-label=""
+            class="not-prose group relative rounded-lg border border-black/15 p-0 transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white grid isolate overflow-hidden"
+            ><div class="w-full h-48 overflow-hidden">
+              <img
+                width="900"
+                height="900"
+                src="img/web3forms-generator.webp"
+                class="w-full h-full object-cover -z-10 group-hover:scale-110 duration-1000 transition-all css-filter size-full"
+                alt="Web3Forms Generator"
+                decoding="async"
+              />
+            </div><div
+              class="flex flex-col truncate gap-1 pl p-4 relative z-10"
+            >
+              <h3
+                class="font-semibold max-w-xl truncate text-xl dark:text-white"
+              >
+                Web3Forms Generator
+              </h3><p class="w-full truncate text-base dark:text-gray-200">
+                Crea tus formularios en HTML con Tailwind o CSS Vanilla.
+              </p>
+            </div></a
+          >
+        </li>
       </ul>
     </div>
   </section>

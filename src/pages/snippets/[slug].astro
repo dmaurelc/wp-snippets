@@ -1,6 +1,10 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getAllSnippets, getSnippetBySlug } from '../../lib/api';
+import Layout from "../../layouts/Layout.astro";
+import { getAllSnippets, getSnippetBySlug } from "../../lib/api";
+import "highlight.js/styles/default.css";
+
+// Using require
+const hljs = "highlight.js";
 
 export async function getStaticPaths() {
   const snippets = await getAllSnippets();
@@ -13,91 +17,87 @@ const { slug } = Astro.params;
 const snippet = await getSnippetBySlug(slug);
 
 if (!snippet) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 ---
 
-<Layout 
+<Layout
   title={`${snippet.title} - Code Snippets Blog`}
   description={snippet.acf_fields.resumen}
 >
-  <article class="max-w-4xl mx-auto px-4 py-8" data-pagefind-body>
-    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden">
-      {snippet.imagen_destacada && (
-        <div class="w-full aspect-video">
-          <img
-            src={snippet.imagen_destacada}
-            alt={snippet.title}
-            class="w-full h-full object-cover"
-            data-pagefind-meta="image"
-          />
-        </div>
-      )}
-      
-      <div class="p-8">
-        <header class="mb-8">
-          <div class="flex flex-wrap gap-2 mb-4">
-            {snippet.categorias.map((category) => (
-              <span 
-                class="px-3 py-1 text-sm bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-100 rounded-full"
-                data-pagefind-filter="category"
-              >
-                {category}
-              </span>
-            ))}
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
+    />
+  </head>
+  <section class="md:py-12 py-8">
+    <div>
+      <a
+        href="/"
+        class="group relative flex w-fit flex-nowrap rounded border border-solid border-gray-200 py-1.5 pl-7 pr-3 transition-colors duration-300 ease-in-out hover:bg-gray-100 dark:border-gray-300 dark:hover:bg-slate-700 dark:hover:text-white"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2"
+        >
+          <line
+            x1="5"
+            y1="12"
+            x2="19"
+            y2="12"
+            class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"
+          ></line>
+          <polyline
+            points="12 5 5 12 12 19"
+            class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"
+          ></polyline>
+        </svg>
+        <div class="text-sm"><span>Volver al inicio</span></div>
+      </a>
+      <div class="my-10 space-y-4">
+        <div class="flex items-center gap-1.5">
+          <div class="text-sm">
+            <span
+              >{
+                new Date(snippet.date).toLocaleDateString("es-ES", {
+                  dateStyle: "long",
+                })
+              }</span
+            >
           </div>
-          <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4" data-pagefind-meta="title">
-            {snippet.title}
-          </h1>
-          <p class="text-lg text-gray-600 dark:text-gray-300" data-pagefind-meta="description">
-            {snippet.acf_fields.resumen}
-          </p>
-        </header>
-
-        <div class="prose prose-lg max-w-none dark:prose-invert">
-          {snippet.acf_fields.descripcion && (
-            <div class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Description</h2>
-              <div class="text-gray-600 dark:text-gray-300" set:html={snippet.acf_fields.descripcion} />
-            </div>
-          )}
-          
-          {snippet.acf_fields.codigo && (
-            <div class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Code</h2>
-              <div class="bg-[#282a36] rounded-lg overflow-hidden">
-                <pre class="p-4 overflow-x-auto">
-                  <code set:html={snippet.acf_fields.codigo} />
-                </pre>
-              </div>
-            </div>
-          )}
-          
-          {snippet.acf_fields.instrucciones && (
-            <div class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Instructions</h2>
-              <div class="text-gray-600 dark:text-gray-300" set:html={snippet.acf_fields.instrucciones} />
-            </div>
-          )}
-          
-          {snippet.acf_fields.galeria && snippet.acf_fields.galeria.length > 0 && (
-            <div class="mb-8">
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Gallery</h2>
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {snippet.acf_fields.galeria.map((imageUrl) => (
-                  <div class="aspect-video rounded-lg overflow-hidden">
-                    <img
-                      src={imageUrl}
-                      alt=""
-                      class="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <span>•</span>
+          <div class="text-sm">Tiempo de lectura: 2 minutos</div>
         </div>
+        <h1 class="text-3xl font-semibold text-black dark:text-white">
+          {snippet.title}
+        </h1>
+        <p>{snippet.acf_fields.resumen}</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Autor: {snippet.acf_fields.autor}
+        </p>
       </div>
+
+      <div class="border-b border-black/15 dark:border-white/20"></div>
+
+      <article class="grid gap-4 mt-6 snippet-single">
+        <div class="flex flex-col gap-4">
+          <h3 class="md:text-2xl text-lg">Código Snippet</h3>
+
+          <pre>
+            <code class={`hljs language-${snippet.acf_fields.tipo_de_codigo}`}>{snippet.acf_fields.codigo.trimStart()}</code>
+          </pre>
+        </div>
+      </article>
     </div>
-  </article>
+  </section>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css"
+  />
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
+    defer></script>
 </Layout>

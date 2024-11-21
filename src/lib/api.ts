@@ -1,4 +1,4 @@
-const API_BASE = "https://yabewp.instawp.xyz/wp-json/custom/v1";
+const API_BASE = "https://wp-snippets.thisistheweb.cl/wp-json/custom/v1";
 
 export interface Snippet {
   ID: number;
@@ -13,6 +13,8 @@ export interface Snippet {
     codigo: string;
     instrucciones: string;
     galeria: string[];
+    autor: string; // Nuevo campo
+    tipo_de_codigo: string; // Nuevo campo
   };
 }
 
@@ -41,7 +43,18 @@ export async function getAllSnippets(): Promise<Snippet[]> {
       throw new Error(`API error: ${response.status}`);
     }
     const data = await response.json();
-    return Array.isArray(data) ? data : [];
+
+    // Validación de estructura para garantizar que los campos nuevos existan
+    return Array.isArray(data)
+      ? data.map((snippet) => ({
+          ...snippet,
+          acf_fields: {
+            ...snippet.acf_fields,
+            autor: snippet.acf_fields.autor || "Desconocido",
+            tipo_de_codigo: snippet.acf_fields.tipo_de_codigo || "text",
+          },
+        }))
+      : [];
   } catch (error) {
     console.error("Error fetching snippets:", error);
     return [];

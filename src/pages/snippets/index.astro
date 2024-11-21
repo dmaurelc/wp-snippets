@@ -1,0 +1,99 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SnippetCard from "../../components/SnippetCard.astro";
+import { getAllSnippets } from "../../lib/api";
+
+// Obtener todos los snippets desde la API
+const snippets = await getAllSnippets();
+const ITEMS_PER_PAGE = 8; // Número de snippets por página
+
+// Obtener el número de página desde la URL (query params)
+const currentPage = parseInt(Astro.url.searchParams.get("page") || "1", 10);
+
+// Calcular los índices de los elementos a mostrar
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = startIndex + ITEMS_PER_PAGE;
+
+// Snippets para la página actual
+const paginatedSnippets = snippets.slice(startIndex, endIndex);
+
+// Calcular el número total de páginas
+const totalPages = Math.ceil(snippets.length / ITEMS_PER_PAGE);
+---
+
+<Layout title="Code Snippets Blog">
+    <section
+      class="md:py-12 py-8 bg-slate-950 border-y border-solid border-black/15"
+    >
+      <div class="space-y-4" data-pagefind-ignore="">
+        <h1 class="font-semibold md:text-4xl text-xl text-white text-center">
+          Repositorio Code Snippets para WordPress
+        </h1>
+        <p class="text-gray-300 md:text-lg text-base text-center">
+          <span>
+            Aquí encontrarás algunos snippets compartidos en la comunidad de
+          </span>
+          <a
+            class="inline-block text-current underline decoration-white/50 underline-offset-[3px] transition-colors duration-300 ease-in-out hover:text-white hover:decoration-white/90"
+            target="_blank"
+            href="https://lamaquinadelbranding.com/"
+          >
+            La Máquina del Branding.
+          </a>
+        </p>
+      </div>
+    </section>
+  
+    <section class="space-y-6 md:py-12 py-8">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-y-2">
+          <h2 class="font-semibold md:text-2xl text-lg dark:text-white">
+            Snippets
+          </h2>
+        </div>
+  
+        <ul class="not-prose flex flex-col gap-4">
+          {paginatedSnippets.map((snippet) => (
+            <SnippetCard
+              title={snippet.title}
+              slug={snippet.slug}
+              resumen={snippet.acf_fields.resumen}
+              categorias={snippet.categorias}
+              imagen_destacada={snippet.imagen_destacada}
+            />
+          ))}
+        </ul>
+      </div>
+  
+      <!-- Paginación -->
+      {totalPages > 1 && ( <!-- Mostrar solo si hay más de 1 página -->
+        <nav class="flex justify-center gap-4 mt-8">
+          <!-- Botón de Página Anterior -->
+          {currentPage > 1 && (
+            <a
+              href={`?page=${currentPage - 1}`}
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+            >
+              Anterior
+            </a>
+          )}
+  
+          <!-- Indicador de Página Actual -->
+          <span class="px-4 py-2 bg-gray-300 dark:bg-gray-800 rounded text-black dark:text-white">
+            Página {currentPage} de {totalPages}
+          </span>
+  
+          <!-- Botón de Página Siguiente -->
+          {currentPage < totalPages && (
+            <a
+              href={`?page=${currentPage + 1}`}
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+            >
+              Siguiente
+            </a>
+          )}
+        </nav>
+      )}
+    </section>
+  </Layout>
+  
