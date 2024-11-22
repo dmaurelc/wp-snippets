@@ -62,13 +62,11 @@ if (!snippet) {
             <span
               >{
                 new Date(snippet.date).toLocaleDateString("es-ES", {
-                  dateStyle: "long",
+                  dateStyle: "short",
                 })
               }</span
             >
           </div>
-          <span>•</span>
-          <div class="text-sm">Tiempo de lectura: 2 minutos</div>
         </div>
         <h1 class="text-3xl font-semibold text-black dark:text-white">
           {snippet.title}
@@ -86,7 +84,7 @@ if (!snippet) {
           <h3 class="md:text-2xl text-lg">Código Snippet</h3>
 
           <pre>
-            <code class={`hljs language-${snippet.acf_fields.tipo_de_codigo}`}>{snippet.acf_fields.codigo.trimStart()}</code>
+            <code class={`hljs language-${snippet.acf_fields.tipo_de_codigo} max-w-screen-lg !text-wrap`}>{snippet.acf_fields.codigo.trimStart()}</code>
           </pre>
         </div>
       </article>
