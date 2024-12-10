@@ -1,11 +1,11 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import SnippetCard from '../../components/SnippetCard.astro';
-import { getCategories, getSnippetsByCategory } from '../../lib/api';
+import Layout from "../../layouts/Layout.astro";
+import SnippetCard from "../../components/SnippetCard.astro";
+import { getCategories, getSnippetsByCategory } from "../../lib/api";
 
 export async function getStaticPaths() {
   const categories = await getCategories();
-  
+
   return categories.map((category) => ({
     params: { category },
   }));
@@ -16,16 +16,36 @@ const snippets = await getSnippetsByCategory(category);
 ---
 
 <Layout title={`${category} Snippets - Code Snippets Blog`}>
-  <h1 class="text-4xl font-bold text-gray-900 mb-8">{category} Snippets</h1>
-  
-  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {snippets.map((snippet) => (
-      <SnippetCard
-        title={snippet.title}
-        description={snippet.description}
-        category={snippet.category}
-        slug={snippet.slug}
-      />
-    ))}
-  </div>
+  <section
+    class="md:py-12 py-8 bg-slate-950 border-y border-solid border-black/15"
+  >
+    <div class="space-y-4" data-pagefind-ignore="">
+      <h1 class="font-semibold md:text-4xl text-xl text-white text-center">
+        Snippets: {category}
+      </h1>
+    </div>
+  </section>
+
+  <section class="space-y-6 md:py-12 py-8">
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-y-2">
+        <h2 class="font-semibold md:text-2xl text-lg dark:text-white">
+          Snippets
+        </h2>
+      </div>
+
+      <ul class="not-prose flex flex-col gap-4">
+        {
+          snippets.map((snippet) => (
+            <SnippetCard
+              title={snippet.title}
+              slug={snippet.slug}
+              excerpt={snippet.excerpt}
+              categorias={snippet.categorias}
+            />
+          ))
+        }
+      </ul>
+    </div>
+  </section>
 </Layout>

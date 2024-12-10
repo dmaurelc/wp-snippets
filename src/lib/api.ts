@@ -5,16 +5,16 @@ export interface Snippet {
   title: string;
   slug: string;
   date: string;
+  content: string;
+  excerpt: string;
   categorias: string[];
-  imagen_destacada: string | null;
   acf_fields: {
-    resumen: string;
-    descripcion: string;
-    codigo: string;
+    codigos: Array<{
+      tipo_de_codigo: string;
+      codigo: string;
+    }>;
     instrucciones: string;
-    galeria: string[];
-    autor: string; // Nuevo campo
-    tipo_de_codigo: string; // Nuevo campo
+    autor: string;
   };
 }
 
@@ -43,18 +43,7 @@ export async function getAllSnippets(): Promise<Snippet[]> {
       throw new Error(`API error: ${response.status}`);
     }
     const data = await response.json();
-
-    // Validación de estructura para garantizar que los campos nuevos existan
-    return Array.isArray(data)
-      ? data.map((snippet) => ({
-          ...snippet,
-          acf_fields: {
-            ...snippet.acf_fields,
-            autor: snippet.acf_fields.autor || "Desconocido",
-            tipo_de_codigo: snippet.acf_fields.tipo_de_codigo || "text",
-          },
-        }))
-      : [];
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error("Error fetching snippets:", error);
     return [];

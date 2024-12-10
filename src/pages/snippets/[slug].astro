@@ -3,9 +3,6 @@ import Layout from "../../layouts/Layout.astro";
 import { getAllSnippets, getSnippetBySlug } from "../../lib/api";
 import "highlight.js/styles/default.css";
 
-// Using require
-const hljs = "highlight.js";
-
 export async function getStaticPaths() {
   const snippets = await getAllSnippets();
   return snippets.map((snippet) => ({
@@ -23,7 +20,7 @@ if (!snippet) {
 
 <Layout
   title={`${snippet.title} - Code Snippets Blog`}
-  description={snippet.acf_fields.resumen}
+  description={snippet.excerpt}
 >
   <head>
     <link
@@ -59,19 +56,19 @@ if (!snippet) {
       <div class="my-10 space-y-4">
         <div class="flex items-center gap-1.5">
           <div class="text-sm">
-            <span
-              >{
+            <span>
+              {
                 new Date(snippet.date).toLocaleDateString("es-ES", {
                   dateStyle: "short",
                 })
-              }</span
-            >
+              }
+            </span>
           </div>
         </div>
         <h1 class="text-3xl font-semibold text-black dark:text-white">
           {snippet.title}
         </h1>
-        <p>{snippet.acf_fields.resumen}</p>
+        <p>{snippet.excerpt}</p>
         <p class="text-sm text-gray-500 dark:text-gray-400">
           Autor: {snippet.acf_fields.autor}
         </p>
@@ -80,13 +77,37 @@ if (!snippet) {
       <div class="border-b border-black/15 dark:border-white/20"></div>
 
       <article class="grid gap-4 mt-6 snippet-single">
-        <div class="flex flex-col gap-4">
-          <h3 class="md:text-2xl text-lg">Código Snippet</h3>
+        {
+          snippet.acf_fields.codigos.map((codigoItem, index) => (
+            <div class="flex flex-col gap-4">
+              <h3 class="md:text-2xl text-lg">
+                Código Snippet{" "}
+                {snippet.acf_fields.codigos.length > 1 ? `#${index + 1}` : ""}
+                {codigoItem.tipo_de_codigo &&
+                  ` - ${codigoItem.tipo_de_codigo.toUpperCase()}`}
+              </h3>
+              <pre>
+                <code
+                  class={`hljs language-${codigoItem.tipo_de_codigo} max-w-screen-lg !text-wrap`}
+                >
+                  {codigoItem.codigo.trim()}
+                </code>
+              </pre>
+            </div>
+          ))
+        }
 
-          <pre>
-            <code class={`hljs language-${snippet.acf_fields.tipo_de_codigo} max-w-screen-lg !text-wrap`}>{snippet.acf_fields.codigo.trimStart()}</code>
-          </pre>
-        </div>
+        {
+          snippet.acf_fields.instrucciones && (
+            <div class="mt-8">
+              <h3 class="md:text-2xl text-lg mb-4">Instrucciones</h3>
+              <div
+                class="prose dark:prose-invert"
+                set:html={snippet.acf_fields.instrucciones}
+              />
+            </div>
+          )
+        }
       </article>
     </div>
   </section>

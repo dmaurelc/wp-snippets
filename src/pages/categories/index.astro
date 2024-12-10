@@ -1,21 +1,41 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getCategories } from '../../lib/api';
+import Layout from "../../layouts/Layout.astro";
+import { getCategories } from "../../lib/api";
 
 const categories = await getCategories();
 ---
 
 <Layout title="Categories - Code Snippets Blog">
-  <h1 class="text-4xl font-bold text-gray-900 mb-8">Categories</h1>
-  
-  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-    {categories.map((category) => (
-      <a
-        href={`/categories/${category}`}
-        class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-      >
-        <h2 class="text-xl font-semibold text-gray-900">{category}</h2>
-      </a>
-    ))}
-  </div>
+  <section
+    class="md:py-12 py-8 bg-slate-950 border-y border-solid border-black/15"
+  >
+    <div class="space-y-4" data-pagefind-ignore="">
+      <h1 class="font-semibold md:text-4xl text-xl text-white text-center">
+        Categorías
+      </h1>
+    </div>
+  </section>
+
+  <section class="space-y-6 md:py-12 py-8">
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-y-2">
+        <h2 class="font-semibold md:text-2xl text-lg dark:text-white">
+          Snippets
+        </h2>
+      </div>
+
+      <ul class="not-prose grid md:grid-cols-2 gap-4">
+        {
+          categories.map((category) => (
+            <a
+              href={`/categories/${category}`}
+              class="bg-white p-6 rounded-lg border border-solid hover:shadow-lg transition-shadow"
+            >
+              <h2 class="text-xl font-semibold text-gray-900">{category}</h2>
+            </a>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
 </Layout>
