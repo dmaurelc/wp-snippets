@@ -1,7 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getAllSnippets, getSnippetBySlug } from "../../lib/api";
-import "highlight.js/styles/default.css";
+import CopyButton from "../../components/CopyButton.astro";
+// import "highlight.js/styles/default.css";
 
 export async function getStaticPaths() {
   const snippets = await getAllSnippets();
@@ -22,12 +23,12 @@ if (!snippet) {
   title={`${snippet.title} - Code Snippets Blog`}
   description={snippet.excerpt}
 >
-  <head>
+  <!-- <head>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
     />
-  </head>
+  </head> -->
   <section class="md:py-12 py-8">
     <div>
       <a
@@ -81,18 +82,20 @@ if (!snippet) {
           snippet.acf_fields.codigos.map((codigoItem, index) => (
             <div class="flex flex-col gap-4">
               <h3 class="md:text-2xl text-lg">
-                Código Snippet{" "}
-                {snippet.acf_fields.codigos.length > 1 ? `#${index + 1}` : ""}
+                Código Snippet
+                {snippet.acf_fields.codigos.length > 1 ? ` #${index + 1}` : ""}
                 {codigoItem.tipo_de_codigo &&
                   ` - ${codigoItem.tipo_de_codigo.toUpperCase()}`}
               </h3>
-              <pre>
-                <code
-                  class={`hljs language-${codigoItem.tipo_de_codigo} max-w-screen-lg !text-wrap`}
-                >
-                  {codigoItem.codigo.trim()}
-                </code>
-              </pre>
+              <div class="code-block relative">
+                <pre class="!p-0">
+                  <code
+                    class={`hljs language-${codigoItem.tipo_de_codigo} block max-w-screen-lg !text-wrap whitespace-pre p-6`}
+                    set:html={codigoItem.codigo.trim()}
+                  />
+                </pre>
+                <CopyButton />
+              </div>
             </div>
           ))
         }

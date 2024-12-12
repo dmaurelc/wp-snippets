@@ -70,7 +70,11 @@
     }
 
     pre {
-      @apply dark:!bg-slate-950 !bg-slate-900 text-white text-sm p-6 dark:text-gray-200 rounded-md border border-slate-600;
+      @apply dark:!bg-slate-950 !bg-slate-900 text-white text-sm !px-8 dark:text-gray-200 rounded-md border border-slate-600;
+    }
+
+    .code-block {
+      @apply relative;
     }
   }
 }

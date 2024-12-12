@@ -1,0 +1,103 @@
+---
+
+---
+
+<button
+  class="copy-button absolute top-8 right-6 p-2 rounded-md bg-slate-700 hover:bg-slate-600 text-white text-sm flex items-center gap-2 transition-all duration-200"
+  aria-label="Copiar código"
+>
+  <svg
+    class="copy-icon size-4"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+  </svg>
+  <svg
+    class="check-icon size-4 hidden"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+  <span class="copy-text">Copiar</span>
+</button>
+
+<script>
+  function cleanCode(code: string): string {
+    // Dividir el código en líneas
+    const lines = code.split("\n");
+
+    // Filtrar líneas vacías al inicio y al final
+    let start = 0;
+    let end = lines.length - 1;
+
+    while (start < lines.length && !lines[start].trim()) start++;
+    while (end > start && !lines[end].trim()) end--;
+
+    // Obtener solo las líneas con contenido
+    const contentLines = lines.slice(start, end + 1);
+
+    // Encontrar la cantidad mínima de espacios en blanco al inicio de cada línea
+    const minIndent = contentLines.reduce((min, line) => {
+      if (!line.trim()) return min;
+      const indent = line.match(/^\s*/)[0].length;
+      return Math.min(min, indent);
+    }, Infinity);
+
+    // Eliminar el espacio en blanco común al inicio de cada línea
+    return contentLines.map((line) => line.slice(minIndent)).join("\n");
+  }
+
+  function initCopyButtons() {
+    document.querySelectorAll(".copy-button").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const codeElement = button
+          .closest(".code-block")
+          ?.querySelector("code");
+        if (!codeElement) return;
+
+        const code = cleanCode(codeElement.textContent || "");
+
+        try {
+          await navigator.clipboard.writeText(code);
+
+          const copyIcon = button.querySelector(".copy-icon");
+          const checkIcon = button.querySelector(".check-icon");
+          const copyText = button.querySelector(".copy-text");
+
+          if (copyIcon && checkIcon && copyText) {
+            copyIcon.classList.add("hidden");
+            checkIcon.classList.remove("hidden");
+            copyText.textContent = "¡Copiado!";
+
+            setTimeout(() => {
+              copyIcon.classList.remove("hidden");
+              checkIcon.classList.add("hidden");
+              copyText.textContent = "Copiar";
+            }, 2000);
+          }
+        } catch (err) {
+          console.error("Error al copiar:", err);
+        }
+      });
+    });
+  }
+
+  // Inicializar en la carga de la página
+  initCopyButtons();
+
+  // Re-inicializar después de las transiciones de vista
+  document.addEventListener("astro:after-swap", initCopyButtons);
+</script>
