@@ -12,7 +12,15 @@ export async function getStaticPaths() {
 }
 
 const { category } = Astro.params;
-const snippets = await getSnippetsByCategory(category);
+const allSnippets = await getSnippetsByCategory(category);
+
+// Configuración de paginación
+const ITEMS_PER_PAGE = 8;
+const currentPage = parseInt(Astro.url.searchParams.get("page") || "1", 10);
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = startIndex + ITEMS_PER_PAGE;
+const paginatedSnippets = allSnippets.slice(startIndex, endIndex);
+const totalPages = Math.ceil(allSnippets.length / ITEMS_PER_PAGE);
 ---
 
 <Layout title={`${category} Snippets - Code Snippets Blog`}>
@@ -36,7 +44,7 @@ const snippets = await getSnippetsByCategory(category);
 
       <ul class="not-prose flex flex-col gap-4">
         {
-          snippets.map((snippet) => (
+          paginatedSnippets.map((snippet) => (
             <SnippetCard
               title={snippet.title}
               slug={snippet.slug}
@@ -47,5 +55,34 @@ const snippets = await getSnippetsByCategory(category);
         }
       </ul>
     </div>
+
+    {/* Paginación */}
+    {
+      totalPages > 1 && (
+        <nav class="flex justify-center gap-4 mt-8">
+          {currentPage > 1 && (
+            <a
+              href={`/categories/${category}?page=${currentPage - 1}`}
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+            >
+              Anterior
+            </a>
+          )}
+
+          <span class="px-4 py-2 bg-gray-300 dark:bg-gray-800 rounded text-black dark:text-white">
+            Página {currentPage} de {totalPages}
+          </span>
+
+          {currentPage < totalPages && (
+            <a
+              href={`/categories/${category}?page=${currentPage + 1}`}
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+            >
+              Siguiente
+            </a>
+          )}
+        </nav>
+      )
+    }
   </section>
 </Layout>
